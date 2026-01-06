@@ -82,7 +82,7 @@
             </activation>
             <properties>
                 <!--当前环境-->
-                <profile>dev</profile>
+                <build.env>dev</build.env>
                 <!--代码构建控制-->
                 <!--跳过构建源代码包-->
                 <skip.build.source.package>false</skip.build.source.package>
@@ -97,7 +97,7 @@
             <id>docker</id>
             <properties>
                 <!--当前环境-->
-                <profile>docker</profile>
+                <build.env>docker</build.env>
                 <!--数据库类型-->
                 <!--跳过构建源代码包-->
                 <skip.build.source.package>true</skip.build.source.package>
@@ -112,7 +112,7 @@
             <id>prod</id>
             <properties>
                 <!--当前环境-->
-                <profile>prod</profile>
+                <build.env>prod</build.env>
                 <!--代码构建控制-->
                 <!--跳过构建源代码包-->
                 <skip.build.source.package>false</skip.build.source.package>
@@ -122,7 +122,7 @@
                 <skip.build.git.commit.info>false</skip.build.git.commit.info>
             </properties>
         </profile>
-        <!-- 发布配置 -->
+        <!-- 发布配置：发布到 Maven Central -->
         <profile>
             <id>release</id>
             <build>
@@ -130,6 +130,15 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -138,6 +147,14 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
@@ -150,6 +167,7 @@
                 </plugins>
             </build>
         </profile>
+        <!-- 发布配置：发布到私有仓库 -->
         <profile>
             <id>releasePrivate</id>
             <build>
@@ -157,6 +175,15 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -169,6 +196,7 @@
                 </plugins>
             </build>
         </profile>
+        <!-- 发布配置：GitHub Actions CI/CD 发布 -->
         <profile>
             <id>githubAction</id>
             <build>
@@ -176,6 +204,15 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -215,23 +252,9 @@
     </profiles>
 
     <build>
-        <resources>
-            <!-- 先指定 src/main/resources下所有文件及文件夹为资源文件 -->
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.archetype</groupId>
-                <artifactId>archetype-packaging</artifactId>
-                <version>${archetype-packaging.version}</version>
-            </extension>
-        </extensions>
+        <!-- 根 POM 是聚合 POM，通常不需要 resources filtering -->
+        <!-- 如果子模块需要 resources filtering，应在子模块中配置 -->
+        <!-- archetype-packaging extension 只在创建 archetype 时需要，普通项目不需要 -->
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -307,27 +330,21 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
-                    <configuration>
-                        <skipTests>true</skipTests>
-                    </configuration>
+                    <!-- 默认不跳过测试，如需跳过请使用命令行参数 -DskipTests -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>3.3.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <configuration>
+                        <skipSource>${skip.build.source.package}</skipSource>
+                    </configuration>
+                    <!-- executions 在 release profile 中定义，避免所有构建都生成源码包 -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.12.0</version>
                     <configuration>
                         <show>package</show>
                         <tags>
@@ -353,14 +370,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>${maven-gpg-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
+                    <!-- executions 只在 release/githubAction profile 中执行，避免所有构建都签名 -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -403,16 +413,20 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                <!-- 统一版本号管理 -->
+                <!-- 统一版本号管理：flatten-maven-plugin 用于解析 CI-friendly 版本号（如 ${revision}） -->
+                <!-- 在发布时生成 flattened-pom.xml，将 ${revision} 解析为实际版本号 -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>${flatten-maven-plugin.version}</version>
                     <configuration>
-                        <updatePomFile>true</updatePomFile>
+                        <!-- false: 不修改原始 POM，只生成 flattened-pom.xml，避免 Git 冲突 -->
+                        <updatePomFile>false</updatePomFile>
+                        <!-- resolveCiFriendliesOnly: 只解析 ${revision}、${sha1}、${changelist} 等 CI-friendly 变量 -->
                         <flattenMode>resolveCiFriendliesOnly</flattenMode>
                     </configuration>
                     <executions>
+                        <!-- 在 process-resources 阶段生成 flattened-pom.xml -->
                         <execution>
                             <id>flatten</id>
                             <phase>process-resources</phase>
@@ -420,6 +434,7 @@
                                 <goal>flatten</goal>
                             </goals>
                         </execution>
+                        <!-- 在 clean 阶段清理生成的 flattened-pom.xml -->
                         <execution>
                             <id>flatten.clean</id>
                             <phase>clean</phase>
@@ -489,21 +504,9 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <skipSource>${skip.build.source.package}</skipSource>
-                </configuration>
-            </plugin>
+            <!-- 根 POM 是聚合 POM，不需要 flatten 和 apt 处理 -->
+            <!-- flatten-maven-plugin 和 apt-maven-plugin 应在子模块中执行 -->
+            <!-- maven-source-plugin 通过 profile 控制执行 -->
         </plugins>
     </build>
 
