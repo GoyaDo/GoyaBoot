@@ -1,6 +1,6 @@
 package com.ysmjjsy.goya.core.exception;
 
-import com.ysmjjsy.goya.core.exception.error.CommonErrorCodeEnum;
+import com.ysmjjsy.goya.core.exception.error.ErrorCode;
 
 import java.io.Serial;
 
@@ -14,19 +14,19 @@ public class CommonException extends AbstractRuntimeException{
     @Serial
     private static final long serialVersionUID = -1658369210895863964L;
 
-    public CommonException(CommonErrorCodeEnum errorCode) {
+    public CommonException(ErrorCode errorCode) {
         super(errorCode);
     }
 
-    public CommonException(CommonErrorCodeEnum errorCode, String message) {
+    public CommonException(ErrorCode errorCode, String message) {
         super(errorCode, message);
     }
 
-    public CommonException(CommonErrorCodeEnum errorCode, Throwable cause) {
+    public CommonException(ErrorCode errorCode, Throwable cause) {
         super(errorCode, cause);
     }
 
-    public CommonException(CommonErrorCodeEnum errorCode, String message, Throwable cause) {
+    public CommonException(ErrorCode errorCode, String message, Throwable cause) {
         super(errorCode, message, cause);
     }
 

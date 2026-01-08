@@ -1,6 +1,6 @@
 package com.ysmjjsy.goya.core.exception.error;
 
-import com.ysmjjsy.goya.core.enums.I18nEnum;
+import com.ysmjjsy.goya.core.enums.IBizEnum;
 
 /**
  * <p>error code</p>
@@ -8,30 +8,15 @@ import com.ysmjjsy.goya.core.enums.I18nEnum;
  * @author goya
  * @since 2026/1/7 22:54
  */
-public interface ErrorCode extends I18nEnum {
+public interface ErrorCode extends IBizEnum<String> {
 
     /**
-     * code
+     * 国际化
      *
-     * @return code
+     * @return 国际化值
      */
-    String getCode();
-
-    /**
-     * message
-     *
-     * @return message
-     */
-    String getMessage();
-
-    /**
-     * category
-     *
-     * @return category
-     */
-    ErrorCategoryEnum getCategory();
-
+    @Override
     default String getI18nKey() {
-        return "error." + getCode();
+        return "response.code." + getCode();
     }
 }

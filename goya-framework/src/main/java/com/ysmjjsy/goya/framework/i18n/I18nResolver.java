@@ -6,7 +6,7 @@ package com.ysmjjsy.goya.framework.i18n;
  * @author goya
  * @since 2026/1/7 23:01
  */
-public interface I18nHandler {
+public interface I18nResolver {
 
     /**
      * <p>get i18n message</p>

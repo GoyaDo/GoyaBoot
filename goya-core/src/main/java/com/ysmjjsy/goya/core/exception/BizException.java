@@ -1,6 +1,6 @@
 package com.ysmjjsy.goya.core.exception;
 
-import com.ysmjjsy.goya.core.exception.error.BIzErrorCodeEnum;
+import com.ysmjjsy.goya.core.exception.error.ErrorCode;
 
 import java.io.Serial;
 
@@ -14,19 +14,19 @@ public class BizException extends AbstractRuntimeException{
     @Serial
     private static final long serialVersionUID = -1658369210895863964L;
 
-    public BizException(BIzErrorCodeEnum errorCode) {
+    public BizException(ErrorCode errorCode) {
         super(errorCode);
     }
 
-    public BizException(BIzErrorCodeEnum errorCode, String message) {
+    public BizException(ErrorCode errorCode, String message) {
         super(errorCode, message);
     }
 
-    public BizException(BIzErrorCodeEnum errorCode, Throwable cause) {
+    public BizException(ErrorCode errorCode, Throwable cause) {
         super(errorCode, cause);
     }
 
-    public BizException(BIzErrorCodeEnum errorCode, String message, Throwable cause) {
+    public BizException(ErrorCode errorCode, String message, Throwable cause) {
         super(errorCode, message, cause);
     }
 

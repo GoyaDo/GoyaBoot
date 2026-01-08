@@ -1,17 +1,16 @@
 package com.ysmjjsy.goya.core.enums;
 
 /**
- * <p>18n enum interface</p>
+ * <p></p>
  *
  * @author goya
- * @since 2026/1/7 22:46
+ * @since 2025/12/19 23:09
  */
-public interface I18nEnum extends IEnum{
+public interface I18nEnum {
 
     /**
-     * get i18n key
-     *
-     * @return i18n key
+     * 国际化
+     * @return key
      */
     String getI18nKey();
 }

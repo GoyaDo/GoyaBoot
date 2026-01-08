@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum IpTypeEnum implements CodeEnum<Integer>, DescriptionEnum {
+public enum IpTypeEnum implements IEnum<Integer> {
 
     IPV4(1, "IPv4"),
 
