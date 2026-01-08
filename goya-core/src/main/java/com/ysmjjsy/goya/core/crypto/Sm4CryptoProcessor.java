@@ -1,6 +1,6 @@
 package com.ysmjjsy.goya.core.crypto;
 
-import com.ysmjjsy.goya.core.utils.CryptoUtils;
+import com.ysmjjsy.goya.core.utils.GoyaCryptoUtils;
 
 /**
  * <p></p>
@@ -8,20 +8,20 @@ import com.ysmjjsy.goya.core.utils.CryptoUtils;
  * @author goya
  * @since 2025/10/9 16:36
  */
-public class Sm4CryptoProcessor implements ISymmetricCryptoProcessor {
+public class Sm4CryptoProcessor implements SymmetricCryptoProcessor {
 
     @Override
     public String createKey() {
-        return CryptoUtils.createSm4key();
+        return GoyaCryptoUtils.createSm4key();
     }
 
     @Override
     public String decrypt(String data, String key) {
-        return CryptoUtils.decryptSm4(data, key);
+        return GoyaCryptoUtils.decryptSm4(data, key);
     }
 
     @Override
     public String encrypt(String data, String key) {
-        return CryptoUtils.encryptSm4(data, key);
+        return GoyaCryptoUtils.encryptSm4(data, key);
     }
 }

@@ -1,6 +1,6 @@
 package com.ysmjjsy.goya.core.crypto;
 
-import com.ysmjjsy.goya.core.utils.CryptoUtils;
+import com.ysmjjsy.goya.core.utils.GoyaCryptoUtils;
 
 /**
  * <p>AES 加密算法处理器</p>
@@ -8,20 +8,20 @@ import com.ysmjjsy.goya.core.utils.CryptoUtils;
  * @author goya
  * @since 2025/10/9 16:33
  */
-public class AesCryptoProcessor implements ISymmetricCryptoProcessor {
+public class AesCryptoProcessor implements SymmetricCryptoProcessor {
 
     @Override
     public String createKey() {
-       return CryptoUtils.createAesKey();
+       return GoyaCryptoUtils.createAesKey();
     }
 
     @Override
     public String decrypt(String data, String key) {
-        return CryptoUtils.decryptAes(data, key);
+        return GoyaCryptoUtils.decryptAes(data, key);
     }
 
     @Override
     public String encrypt(String data, String key) {
-        return CryptoUtils.encryptAes(data, key);
+        return GoyaCryptoUtils.encryptAes(data, key);
     }
 }

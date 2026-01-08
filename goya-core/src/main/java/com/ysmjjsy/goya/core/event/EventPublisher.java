@@ -13,5 +13,5 @@ public interface EventPublisher {
      * @param event  event
      * @param <T> event type
      */
-    <T extends IEvent> void publish(T event);
+    <T extends GoyaEvent> void publish(T event);
 }
