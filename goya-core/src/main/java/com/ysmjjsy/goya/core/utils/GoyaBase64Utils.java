@@ -18,6 +18,8 @@ import java.util.Base64;
 @UtilityClass
 public class GoyaBase64Utils {
 
+    public static final String BASE_64 = ";base64,";
+
     // ==================== 标准 Base64 编码/解码 ====================
 
     /**
@@ -277,7 +279,7 @@ public class GoyaBase64Utils {
         if (base64 == null || base64.isEmpty()) {
             return false;
         }
-        return base64.contains(";base64,") || base64.contains(":") && base64.contains(",");
+        return base64.contains(BASE_64) || base64.contains(":") && base64.contains(",");
     }
 
     /**
@@ -291,7 +293,7 @@ public class GoyaBase64Utils {
         if (base64 == null || base64.isEmpty()) {
             return base64;
         }
-        int index = base64.indexOf(";base64,");
+        int index = base64.indexOf(BASE_64);
         if (index != -1) {
             return base64.substring(index + 8);
         }
@@ -316,7 +318,7 @@ public class GoyaBase64Utils {
         if (mimeType == null || mimeType.isEmpty()) {
             return base64;
         }
-        return "data:" + mimeType + ";base64," + base64;
+        return "data:" + mimeType + BASE_64 + base64;
     }
 
     /**
@@ -332,7 +334,7 @@ public class GoyaBase64Utils {
         if (!base64.startsWith("data:")) {
             return null;
         }
-        int mimeEnd = base64.indexOf(";base64,");
+        int mimeEnd = base64.indexOf(BASE_64);
         if (mimeEnd == -1) {
             mimeEnd = base64.indexOf(",");
         }
@@ -358,7 +360,7 @@ public class GoyaBase64Utils {
             String cleanBase64 = removePrefix(base64);
             Base64.getDecoder().decode(cleanBase64);
             return true;
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             return false;
         }
     }
@@ -376,7 +378,7 @@ public class GoyaBase64Utils {
         try {
             Base64.getUrlDecoder().decode(base64);
             return true;
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             return false;
         }
     }

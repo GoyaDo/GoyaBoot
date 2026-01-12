@@ -2,11 +2,9 @@ package com.ysmjjsy.goya.core.utils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.lionsoul.ip2region.xdb.Header;
-import org.lionsoul.ip2region.xdb.LongByteArray;
-import org.lionsoul.ip2region.xdb.Searcher;
-import org.lionsoul.ip2region.xdb.Version;
+import org.lionsoul.ip2region.xdb.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -50,28 +48,28 @@ public final class GoyaRegionUtils {
 
         // very fast IPv6 detection
         return ip.indexOf(':') >= 0
-                ? resolveIPv6(ip)
-                : resolveIPv4(ip);
+                ? resolveIpV6(ip)
+                : resolveIpV4(ip);
     }
 
-    public static Region resolveIPv4(String ip) {
+    public static Region resolveIpV4(String ip) {
         IPV4_LOCK.readLock().lock();
         try {
             String raw = IPV4_SEARCHER.search(ip);
             return parse(raw);
-        } catch (Exception e) {
+        } catch (Exception _) {
             return Region.EMPTY;
         } finally {
             IPV4_LOCK.readLock().unlock();
         }
     }
 
-    public static Region resolveIPv6(String ip) {
+    public static Region resolveIpV6(String ip) {
         IPV6_LOCK.readLock().lock();
         try {
             String raw = IPV6_SEARCHER.search(ip);
             return parse(raw);
-        } catch (Exception e) {
+        } catch (Exception _) {
             return Region.EMPTY;
         } finally {
             IPV6_LOCK.readLock().unlock();
@@ -82,7 +80,7 @@ public final class GoyaRegionUtils {
      * Internal
      * ===================================================== */
 
-    private static Searcher loadFromResource(String resourcePath) throws Exception {
+    private static Searcher loadFromResource(String resourcePath) throws IOException, XdbException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         if (cl == null) {
             cl = GoyaRegionUtils.class.getClassLoader();

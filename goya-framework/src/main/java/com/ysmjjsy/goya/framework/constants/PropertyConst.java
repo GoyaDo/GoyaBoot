@@ -35,4 +35,6 @@ public interface PropertyConst {
      */
     String PROPERTY_PLATFORM = "platform";
     String PROPERTY_CRYPTO = PROPERTY_PLATFORM + ".crypto";
+    String PROPERTY_CACHE = PROPERTY_PLATFORM + ".cache";
+    String PROPERTY_CAFFEINE = PROPERTY_CACHE + ".cache";
 }

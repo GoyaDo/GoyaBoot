@@ -86,7 +86,7 @@ public class GoyaConvertUtils {
                 return (int) Double.parseDouble(str);
             }
             return Integer.parseInt(str);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return defaultValue;
         }
     }
@@ -134,7 +134,7 @@ public class GoyaConvertUtils {
                 return (long) Double.parseDouble(str);
             }
             return Long.parseLong(str);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return defaultValue;
         }
     }
@@ -178,7 +178,7 @@ public class GoyaConvertUtils {
         }
         try {
             return Float.parseFloat(str);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return defaultValue;
         }
     }
@@ -220,7 +220,7 @@ public class GoyaConvertUtils {
         }
         try {
             return Double.parseDouble(str);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return defaultValue;
         }
     }
@@ -317,7 +317,7 @@ public class GoyaConvertUtils {
                 return (byte) Double.parseDouble(str);
             }
             return Byte.parseByte(str);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return defaultValue;
         }
     }
@@ -365,7 +365,7 @@ public class GoyaConvertUtils {
                 return (short) Double.parseDouble(str);
             }
             return Short.parseShort(str);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException _) {
             return defaultValue;
         }
     }

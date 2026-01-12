@@ -58,7 +58,7 @@ public class CommaDelimitedCollectionJacksonComponent {
 
         @Override
         public List<String> deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
-            String text = p.getText();
+            String text = p.getString();
             if (StringUtils.isBlank(text)) {
                 return new ArrayList<>();
             }
@@ -96,7 +96,7 @@ public class CommaDelimitedCollectionJacksonComponent {
 
         @Override
         public Set<String> deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
-            String text = p.getText();
+            String text = p.getString();
             if (StringUtils.isBlank(text)) {
                 return new LinkedHashSet<>();
             }
@@ -135,7 +135,7 @@ public class CommaDelimitedCollectionJacksonComponent {
 
         @Override
         public Collection<String> deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
-            String text = p.getText();
+            String text = p.getString();
             if (StringUtils.isBlank(text)) {
                 return new ArrayList<>();
             }
@@ -191,7 +191,7 @@ public class CommaDelimitedCollectionJacksonComponent {
                 JsonToken token;
                 while ((token = p.nextToken()) != null && token != JsonToken.END_ARRAY) {
                     if (token == JsonToken.VALUE_STRING) {
-                        String value = p.getText();
+                        String value = p.getString();
                         if (StringUtils.isNotBlank(value)) {
                             list.add(value.trim());
                         }
@@ -202,7 +202,7 @@ public class CommaDelimitedCollectionJacksonComponent {
                         p.skipChildren();
                     } else {
                         // 其他标量值，转换为字符串
-                        String value = p.getText();
+                        String value = p.getString();
                         if (StringUtils.isNotBlank(value)) {
                             list.add(value.trim());
                         }
@@ -211,17 +211,17 @@ public class CommaDelimitedCollectionJacksonComponent {
                 if (list.isEmpty()) {
                     return SymbolConst.BLANK;
                 }
-                return list.stream().collect(Collectors.joining(SymbolConst.COMMA));
+                return String.join(SymbolConst.COMMA, list);
             } else if (currentToken == JsonToken.VALUE_STRING) {
                 // 如果已经是字符串，直接返回
-                String text = p.getText();
+                String text = p.getString();
                 return StringUtils.isBlank(text) ? SymbolConst.BLANK : text;
             } else if (currentToken == JsonToken.VALUE_NULL) {
                 // null值，返回空字符串
                 return SymbolConst.BLANK;
             } else {
                 // 其他类型，尝试读取为字符串
-                String text = p.getText();
+                String text = p.getString();
                 return StringUtils.isBlank(text) ? SymbolConst.BLANK : text;
             }
         }

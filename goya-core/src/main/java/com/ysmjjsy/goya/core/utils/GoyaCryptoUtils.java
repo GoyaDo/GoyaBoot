@@ -46,6 +46,8 @@ public class GoyaCryptoUtils {
 
     private static final String PKCS8_PUBLIC_KEY_BEGIN = "-----BEGIN PUBLIC KEY-----";
     private static final String PKCS8_PUBLIC_KEY_END = "-----END PUBLIC KEY-----";
+    public static final String RSA_ECB_PKCS_1_PADDING = "RSA/ECB/PKCS1Padding";
+    public static final String AES_ECB_PKCS_5_PADDING = "AES/ECB/PKCS5Padding";
 
     static {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
@@ -170,7 +172,7 @@ public class GoyaCryptoUtils {
     public static String decryptAes(String data, String key) {
         try {
             byte[] keyBytes = toAesKeyBytes(key);
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(AES_ECB_PKCS_5_PADDING);
             SecretKeySpec spec = new SecretKeySpec(keyBytes, "AES");
             cipher.init(Cipher.DECRYPT_MODE, spec);
             byte[] decoded = Base64.getDecoder().decode(data);
@@ -190,7 +192,7 @@ public class GoyaCryptoUtils {
     public static String encryptAes(String data, String key) {
         try {
             byte[] keyBytes = toAesKeyBytes(key);
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(AES_ECB_PKCS_5_PADDING);
             SecretKeySpec spec = new SecretKeySpec(keyBytes, "AES");
             cipher.init(Cipher.ENCRYPT_MODE, spec);
             byte[] result = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
@@ -222,7 +224,7 @@ public class GoyaCryptoUtils {
             PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(priv);
             KeyFactory kf = KeyFactory.getInstance("RSA");
             PrivateKey pk = kf.generatePrivate(privSpec);
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            Cipher cipher = Cipher.getInstance(RSA_ECB_PKCS_1_PADDING);
             cipher.init(Cipher.DECRYPT_MODE, pk);
             byte[] decoded = Base64.getDecoder().decode(content);
             byte[] result = cipher.doFinal(decoded);
@@ -243,7 +245,7 @@ public class GoyaCryptoUtils {
             X509EncodedKeySpec pubSpec = new X509EncodedKeySpec(pub);
             KeyFactory kf = KeyFactory.getInstance("RSA");
             PublicKey p = kf.generatePublic(pubSpec);
-            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            Cipher cipher = Cipher.getInstance(RSA_ECB_PKCS_1_PADDING);
             cipher.init(Cipher.ENCRYPT_MODE, p);
             byte[] encryptedData = cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(encryptedData);

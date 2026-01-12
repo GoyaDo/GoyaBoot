@@ -1,3 +1,4 @@
 com.ysmjjsy.goya.framework.configuration.FrameWorkAutoConfiguration
 com.ysmjjsy.goya.framework.configuration.JsonAutoConfiguration
 com.ysmjjsy.goya.framework.configuration.CryptoAutoConfiguration
+com.ysmjjsy.goya.framework.configuration.CaffeineCacheAutoConfiguration

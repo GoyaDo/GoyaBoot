@@ -1,6 +1,8 @@
 package com.ysmjjsy.goya.framework.configuration;
 
+import com.ysmjjsy.goya.core.event.EventPublisher;
 import com.ysmjjsy.goya.framework.context.SpringContext;
+import com.ysmjjsy.goya.framework.event.LocalEventPublisher;
 import com.ysmjjsy.goya.framework.i18n.DefaultResolver;
 import com.ysmjjsy.goya.framework.i18n.I18nResolver;
 import com.ysmjjsy.goya.framework.processor.ApplicationContentPostProcessor;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -30,7 +33,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 @AutoConfiguration
 public class FrameWorkAutoConfiguration {
-    
+
     @PostConstruct
     public void init() {
         log.debug("[Goya] |- framework [framework] FrameWorkAutoConfiguration auto configure.");
@@ -61,21 +64,21 @@ public class FrameWorkAutoConfiguration {
     @Bean
     public ApplicationContentPostProcessor applicationContentPostProcessor() {
         ApplicationContentPostProcessor bean = new ApplicationContentPostProcessor();
-        log.trace("[Goya] |- component [common] CommonAutoConfiguration |- bean [applicationContentPostProcessor] register.");
+        log.trace("[Goya] |- framework [framework] FrameWorkAutoConfiguration |- bean [applicationContentPostProcessor] register.");
         return bean;
     }
 
     @Bean
     public StrategyChoose strategyChoose() {
         StrategyChoose bean = new StrategyChoose();
-        log.trace("[Goya] |- component [common] CommonAutoConfiguration |- bean [strategyChoose] register.");
+        log.trace("[Goya] |- framework [framework] FrameWorkAutoConfiguration |- bean [strategyChoose] register.");
         return bean;
     }
 
     @Bean
-    public ChainContext chainContext() {
-        ChainContext bean = new ChainContext();
-        log.trace("[Goya] |- component [common] CommonAutoConfiguration |- bean [chainContext] register.");
+    public ChainContext<?> chainContext() {
+        ChainContext<?> bean = new ChainContext<>();
+        log.trace("[Goya] |- framework [framework] FrameWorkAutoConfiguration |- bean [chainContext] register.");
         return bean;
     }
 
@@ -95,12 +98,17 @@ public class FrameWorkAutoConfiguration {
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(core,
                 builder.build(),
                 new ThreadPoolExecutor.CallerRunsPolicy()) {
-            @Override
-            protected void afterExecute(Runnable r, Throwable t) {
-                super.afterExecute(r, t);
-            }
         };
-        log.trace("[Goya] |- component [common] CommonAutoConfiguration |- bean [scheduledExecutorService] register.");
+        log.trace("[Goya] |- framework [framework] FrameWorkAutoConfiguration |- bean [scheduledExecutorService] register.");
         return scheduledThreadPoolExecutor;
+    }
+
+    @Bean
+    @Lazy(false)
+    @ConditionalOnMissingBean(EventPublisher.class)
+    public EventPublisher localEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        LocalEventPublisher localEventPublisher = new LocalEventPublisher(applicationEventPublisher);
+        log.trace("[Goya] |- framework [framework] FrameWorkAutoConfiguration |- bean [localEventPublisher] register.");
+        return localEventPublisher;
     }
 }

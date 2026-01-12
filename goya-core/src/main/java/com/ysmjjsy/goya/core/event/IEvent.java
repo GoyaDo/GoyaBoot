@@ -6,6 +6,6 @@ package com.ysmjjsy.goya.core.event;
  * @author goya
  * @since 2026/1/7 23:14
  */
-public interface GoyaEvent {
+public interface IEvent {
 
 }

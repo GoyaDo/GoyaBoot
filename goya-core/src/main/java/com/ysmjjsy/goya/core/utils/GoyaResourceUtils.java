@@ -1,9 +1,12 @@
 package com.ysmjjsy.goya.core.utils;
 
+import com.ysmjjsy.goya.core.constants.SymbolConst;
 import com.ysmjjsy.goya.core.exception.CommonException;
 import lombok.experimental.UtilityClass;
 
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +41,7 @@ public class GoyaResourceUtils {
             return null;
         }
         // 确保路径以 / 开头
-        String path = resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath;
+        String path = resourcePath.startsWith(SymbolConst.FORWARD_SLASH) ? resourcePath : SymbolConst.FORWARD_SLASH + resourcePath;
         return GoyaResourceUtils.class.getResource(path);
     }
 
@@ -54,7 +57,7 @@ public class GoyaResourceUtils {
             throw new CommonException("Resource path cannot be null or empty");
         }
         // 确保路径以 / 开头
-        String path = resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath;
+        String path = resourcePath.startsWith(SymbolConst.FORWARD_SLASH) ? resourcePath : SymbolConst.FORWARD_SLASH + resourcePath;
         InputStream inputStream = GoyaResourceUtils.class.getResourceAsStream(path);
         if (inputStream == null) {
             throw new CommonException("Resource not found: " + resourcePath);
@@ -100,7 +103,7 @@ public class GoyaResourceUtils {
                 sb.append(line).append(System.lineSeparator());
             }
             // 移除最后一个换行符
-            if (sb.length() > 0) {
+            if (!sb.isEmpty()) {
                 sb.setLength(sb.length() - System.lineSeparator().length());
             }
             return sb.toString();
@@ -187,7 +190,7 @@ public class GoyaResourceUtils {
             throw new CommonException("Resource path cannot be null or empty");
         }
         try {
-            String path = resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath;
+            String path = resourcePath.startsWith(SymbolConst.FORWARD_SLASH) ? resourcePath : SymbolConst.FORWARD_SLASH + resourcePath;
             ClassLoader classLoader = GoyaResourceUtils.class.getClassLoader();
             if (classLoader == null) {
                 classLoader = ClassLoader.getSystemClassLoader();
@@ -312,7 +315,7 @@ public class GoyaResourceUtils {
      */
     public static String readUrlAsString(String url, Charset charset) {
         try {
-            URL resourceUrl = new URL(url);
+            URL resourceUrl = new URI(url).toURL();
             try (InputStream inputStream = resourceUrl.openStream();
                  BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset))) {
                 StringBuilder sb = new StringBuilder();
@@ -321,12 +324,12 @@ public class GoyaResourceUtils {
                     sb.append(line).append(System.lineSeparator());
                 }
                 // 移除最后一个换行符
-                if (sb.length() > 0) {
+                if (!sb.isEmpty()) {
                     sb.setLength(sb.length() - System.lineSeparator().length());
                 }
                 return sb.toString();
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new CommonException("Failed to read URL: " + url, e);
         }
     }
@@ -340,7 +343,7 @@ public class GoyaResourceUtils {
      */
     public static byte[] readUrlAsBytes(String url) {
         try {
-            URL resourceUrl = new URL(url);
+            URL resourceUrl = new URI(url).toURL();
             try (InputStream inputStream = resourceUrl.openStream();
                  ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
                 byte[] buffer = new byte[4096];
@@ -350,7 +353,7 @@ public class GoyaResourceUtils {
                 }
                 return outputStream.toByteArray();
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new CommonException("Failed to read URL: " + url, e);
         }
     }
@@ -387,7 +390,7 @@ public class GoyaResourceUtils {
                 sb.append(line).append(System.lineSeparator());
             }
             // 移除最后一个换行符
-            if (sb.length() > 0) {
+            if (!sb.isEmpty()) {
                 sb.setLength(sb.length() - System.lineSeparator().length());
             }
             return sb.toString();
